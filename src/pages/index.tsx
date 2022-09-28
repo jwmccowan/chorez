@@ -1,13 +1,20 @@
 import type { NextPage } from "next";
-import Container from "../components/Container";
 import { FaBroom, FaPlus } from "react-icons/fa";
 import Head from "next/head";
+import Container from "../components/atoms/Container";
+import UserList from "../components/sections/UserList";
+import { useSession } from "next-auth/react";
+import { useForm } from "react-hook-form";
+import TextInput from "../components/composites/TextInput";
 
 const Home: NextPage = () => {
+  const { data: session } = useSession();
+  const { register, handleSubmit } = useForm();
+
   return (
     <>
       <Head>
-        <title>Chorez - Home</title>
+        <title>Chorez</title>
       </Head>
       <section id="welcome" className="bg-blue-100 py-16">
         <Container>
@@ -21,25 +28,20 @@ const Home: NextPage = () => {
       </section>
       <section id="new-chore-form">
         <Container>
-          <form className="flex flex-col py-6 gap-4">
-            <div className="flex flex-col gap-2">
-              <label id="chore-name-label">Chore name:</label>
-              <input
-                aria-labelledby="chore-name-label"
-                className="border border-gray-400 rounded py-2 px-3"
-                placeholder="e.g. Do the dishes"
-                type="text"
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <label id="chore-desc-label">Chore description:</label>
-              <input
-                aria-labelledby="chore-desc-label"
-                className="border border-gray-400 rounded py-2 px-3"
-                placeholder="e.g."
-                type="text"
-              />
-            </div>
+          <form
+            onSubmit={handleSubmit(console.log)}
+            className="flex flex-col py-6 gap-4"
+          >
+            <TextInput
+              label="Chore name"
+              placeholder="e.g."
+              {...register("chore-name")}
+            />
+            <TextInput
+              label="Chore description"
+              placeholder="e.g. Do the dishes"
+              {...register("chore-description")}
+            />
             <div className="flex flex-col gap-2">
               <label id="chore-frequency-label">Frequency:</label>
               <select className="border border-gray-400 rounded py-2 px-3 pr-10">
@@ -62,6 +64,11 @@ const Home: NextPage = () => {
               </button>
             </div>
           </form>
+        </Container>
+      </section>
+      <section>
+        <Container>
+          <UserList />
         </Container>
       </section>
     </>
